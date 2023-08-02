@@ -6,12 +6,14 @@ int main(){
     int len;
     cin>>len;
     long long sum=0;
-    long long r = 31;
-    for(int i=0;i<len;i++) {
-        char ch;
-        cin >> ch;
-        long long num = ch - 96;
-        sum+= num * pow(31,i);
+    int r=1;
+    int M = 1234567891;
+    string num;
+    cin>>num;
+    for(int i=0;i<num.size();i++){
+        sum+= (num[i]-96)* r;
+        r = (r* 31) % M;
     }
-    cout<<sum<<"\n";
+    long long res = sum%M;
+    cout<<res<<"\n";
 }

@@ -27,7 +27,7 @@ bool bfs(int y,int x){
         for(int i=0;i<4;i++){
             int next_y = cur_y+dy[i];
             int next_x = cur_x+dx[i];
-            if(next_x<0 || next_x>=M || next_y<0 || next_y>=N)
+            if(next_y<0 || next_y>=N || next_y<0 || next_x>=M)
                 continue;
             if(board[next_y][next_x] && !visited[next_y][next_x]){
                 visited[next_y][next_x] = true;
@@ -50,8 +50,8 @@ int main(){
         }
         for(int i=0;i<M;i++){
             for(int j=0;j<N;j++){
-                    bool res = bfs(j, i);
-                    if (res) cnt++;
+                    if(bfs(j, i))
+                        cnt++;
             }
         }
         cout<<cnt<<"\n";

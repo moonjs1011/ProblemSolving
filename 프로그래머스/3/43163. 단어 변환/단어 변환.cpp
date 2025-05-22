@@ -2,7 +2,7 @@
 #include <vector>
 #include<queue>
 
-#define INFINITY 99999999
+#define MAX_SIZE 20
 using namespace std;
 
 bool compare(string s1, string s2) {
@@ -11,12 +11,15 @@ bool compare(string s1, string s2) {
     for (int i = 0; i < s1.size(); i++) {
         if (s1[i] != s2[i]) cnt++;
     }
-    if (cnt == 1) return true;
-    else return false;
+    if (cnt == 1) return true; //변경 가능
+    else return false; // 불가능
 }
 
 int bfs(int start_idx, string target, vector<string> words) {
-    vector<int> dict(words.size(), INFINITY);
+    int len = words.size();
+    int dict[len];
+    fill(dict, dict + words.size(), MAX_SIZE);
+    
     queue<pair<string, int>> q; //{word,cost}
     q.push({words[start_idx], 1});
     while (!q.empty()) {
@@ -38,13 +41,13 @@ int bfs(int start_idx, string target, vector<string> words) {
 }
 
 int solution(string begin, string target, vector<string> words) {
-    int answer = INFINITY;
+    int answer = MAX_SIZE;
     for (int i = 0; i < words.size(); i++) {
         if (compare(begin, words[i])) {
             int res = bfs(i, target, words);
             if (res != 0) answer = min(answer, res);
         }
     }
-    if (answer >= INFINITY) answer = 0;
+    if (answer >= MAX_SIZE) answer = 0;
     return answer;
 }

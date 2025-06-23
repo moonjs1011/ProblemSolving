@@ -1,98 +1,65 @@
-#include <iostream>
-#include <climits>
-#include <list>
-#include <queue>
+#include<iostream>
+#include<vector>
+#include<queue>
+
+#define MAXSIZE 801
 using namespace std;
-
-const int Infinite = INT_MAX;
-
-typedef pair<int, int> node;
-
 int N, E;
-list<pair<int, int>> Neighbors[801];
+vector<vector<pair<int, int>>> adj(MAXSIZE);
+const int INF = 1e9;
 
-int Distance[801];
-priority_queue<node, vector<node>, greater<node>> SQ;
-
-int Dijkstra(int Start, int End)
-{
-	for (int i = 1; i <= N; ++i)
-	{
-		Distance[i] = Infinite;
-	}
-
-	Distance[Start] = 0;
-	SQ.emplace(0, Start);
-	while (!SQ.empty())
-	{
-		int CurIdx = SQ.top().second;
-		int CurCst = SQ.top().first;
-		SQ.pop();
-
-		if (CurCst > Distance[CurIdx])
-		{
-			continue;
-		}
-
-		for (const pair<int, int>& N : Neighbors[CurIdx])
-		{
-			int NewCst = Distance[CurIdx] + N.second;
-			if (NewCst < Distance[N.first])
-			{
-				Distance[N.first] = NewCst;
-				SQ.emplace(NewCst, N.first);
-			}
-		}
-	}
-
-	return Distance[End];
+void insertEdge(int v1, int v2, int w) {
+    adj[v1].push_back({v2, w});
+    adj[v2].push_back({v1, w});
 }
 
-int main()
-{
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr); cout.tie(nullptr);
+int dijkstra(int v1, int v2) {
+    vector<int> dist(N + 1, INF);
+    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<>> q;
+    dist[v1] = 0;
+    q.push({0, v1});
+    while (!q.empty()) {
+        int cur_cost = q.top().first;
+        int cur_vid = q.top().second;
+        q.pop();
+        if (dist[cur_vid] < cur_cost) continue;
+        for (auto [next_vid, weight] : adj[cur_vid]) {
+            int next_cost = cur_cost + weight;
+            if (dist[next_vid] > next_cost) {
+                dist[next_vid] = next_cost;
+                q.push({next_cost, next_vid});
+            }
+        }
+    }
+    return dist[v2];
+}
 
-	cin >> N >> E;
-	for (int i = 0; i < E; ++i)
-	{
-		int A, B, C;
-		cin >> A >> B >> C;
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
 
-		Neighbors[A].emplace_back(B, C);
-		Neighbors[B].emplace_back(A, C);
-	}
+    cin >> N >> E;
+    while (E--) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        insertEdge(u, v, w);
+    }
 
-	int X, Y;
-	cin >> X >> Y;
+    int v1, v2;
+    cin >> v1 >> v2;
 
-	int SolA = Infinite, SolB = Infinite;
+    int a1 = dijkstra(1, v1);
+    int a2 = dijkstra(v1, v2);
+    int a3 = dijkstra(v2, N);
+    int b1 = dijkstra(1, v2);
+    int b2 = dijkstra(v2, v1);
+    int b3 = dijkstra(v1, N);
 
-	int Dst1, Dst2, Dst3;
+    int path1 = (a1 >= INF || a2 >= INF || a3 >= INF) ? INF : a1 + a2 + a3;
+    int path2 = (b1 >= INF || b2 >= INF || b3 >= INF) ? INF : b1 + b2 + b3;
 
-	Dst1 = Dijkstra(1, X);
-	Dst2 = Dijkstra(X, Y);
-	Dst3 = Dijkstra(Y, N);
-
-	if (Dst1 != Infinite && Dst2 != Infinite && Dst3 != Infinite)
-	{
-		SolA = Dst1 + Dst2 + Dst3;
-	}
-
-	Dst1 = Dijkstra(1, Y);
-	Dst2 = Dijkstra(Y, X);
-	Dst3 = Dijkstra(X, N);
-
-	if (Dst1 != Infinite && Dst2 != Infinite && Dst3 != Infinite)
-	{
-		SolB = Dst1 + Dst2 + Dst3;
-	}
-
-	if (SolA == Infinite && SolB == Infinite)
-	{
-		cout << -1;
-		return 0;
-	}
-
-	cout << min(SolA, SolB);
+    int ans = min(path1, path2);
+    if (ans >= INF) cout << -1 << "\n";
+    else cout << ans << "\n";
 }

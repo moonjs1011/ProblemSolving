@@ -8,32 +8,34 @@ vector<vector<pair<int, int>>> vec(MAXSIZE);
 int N, M;
 
 void insert(int v1, int v2, int cost) {
-    vec[v1].push_back({v2, cost});
+    vec[v1].push_back({v2, cost});;
+    return;
 }
 
-void dijkstra(int start, int end) {
-    vector<int> dist(N + 1, 1e9);
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-    dist[start] = 0;
-    pq.push({0, start}); // {cost, vertex}
-
-    while (!pq.empty()) {
-        int cur_cost = pq.top().first;
-        int cur_vid = pq.top().second;
-        pq.pop();
-
-        if (dist[cur_vid] < cur_cost) continue; // 이미 더 짧은 거리로 방문했으면 스킵
-
-        for (auto &[next_vid, edge_cost] : vec[cur_vid]) {
-            int next_cost = cur_cost + edge_cost;
-            if (dist[next_vid] > next_cost) {
-                dist[next_vid] = next_cost;
-                pq.push({next_cost, next_vid});
+void bfs(int start, int end) {
+    int dict[MAXSIZE];
+    for (int i = 1; i <= N; i++) dict[i] = 999999999; //set infinty
+    //set start point
+    dict[start] = 0;
+    priority_queue<pair<int, int>> q;
+    q.push({start, 0});
+    //do bfs
+    while (!q.empty()) {
+        int cur_vid = q.top().first;
+        int cur_cost = -q.top().second;
+        q.pop();
+        
+        if(dict[cur_vid] < cur_cost) continue;
+        for (int i = 0; i < vec[cur_vid].size(); i++) {
+            int next_vid = vec[cur_vid][i].first;
+            int next_cost = cur_cost + vec[cur_vid][i].second;
+            if (dict[next_vid] > next_cost) {
+                dict[next_vid] = next_cost;
+                q.push({next_vid, -next_cost});
             }
         }
     }
-
-    cout << dist[end] << "\n";
+    cout << dict[end] << "\n";
 }
 
 int main() {
@@ -48,5 +50,5 @@ int main() {
     }
     int start, end;
     cin >> start >> end;
-    dijkstra(start, end);
+    bfs(start, end);
 }

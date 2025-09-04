@@ -6,7 +6,7 @@ using namespace std;
 int N, M;
 set<int> know;
 vector<vector<int>> party;
-vector<bool> available; // 파티의 상태
+
 int main() {
 
 
@@ -28,7 +28,6 @@ int main() {
             v.push_back(person);
         }
         party.push_back(v);
-        available.push_back(true);
     }
 
     for (int k = 0; k < M; k++) {
@@ -54,7 +53,7 @@ int main() {
     // 마지막으로, 각 파티에 최종적으로 진실을 아는 사람이 있는지 확인
     for (int i = 0; i < party.size(); i++) {
         bool can_lie = true;
-        for (int person_id : party[i]) {
+        for (int person_id: party[i]) {
             // 최종 know set에 포함된 사람이 한 명이라도 있으면
             if (know.count(person_id)) {
                 can_lie = false; // 이 파티에서는 거짓말을 할 수 없다

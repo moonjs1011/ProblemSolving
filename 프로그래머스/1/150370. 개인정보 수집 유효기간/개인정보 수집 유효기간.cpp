@@ -1,6 +1,4 @@
-//
-// Created by Sung_1 on 2025. 10. 1..
-//
+
 #include <string>
 #include <vector>
 #include<map>
@@ -8,8 +6,14 @@
 using namespace std;
 
 //YYYY.MM.DD
+/*
+날짜를 입력으로 받아 크기가 3인 vector로 변환하는 함수입니다.
+ex) input : string day = "2022.03.21"
+    output : vector<int> slice = {2022,3,21}
+*/
 vector<int> sliceDay(string day) {
     vector<int> slice;
+    //yyyy.mm.dd
     int yyyy = stoi(day.substr(0, 4));
     int mm = stoi(day.substr(5, 2));
     int dd = stoi(day.substr(8, 2));
@@ -18,7 +22,10 @@ vector<int> sliceDay(string day) {
     slice.push_back(dd);
     return slice;
 }
-
+/*
+map 자료형으로 변환하는 함수입니다.
+ex) m['A'] = 4, m['B'] = 12, m['D'] = 6
+*/
 map<char, int> convert(vector<string> terms) {
     map<char, int> m;
     for (string s: terms) {
@@ -26,7 +33,9 @@ map<char, int> convert(vector<string> terms) {
     }
     return m;
 }
-
+/*
+* 날짜를 비교하는 함수입니다. 유효하다면 True, 유효기간이 지났다면 False를 리턴합니다.
+*/
 bool compare(vector<int> today, vector<int> day, int expire) {
     int y = day[0];
     int m = day[1];
@@ -34,19 +43,12 @@ bool compare(vector<int> today, vector<int> day, int expire) {
 
     // expire 개월 더하기
     m += expire;
-    y += (m - 1) / 12;
+    y += (m - 1) / 12; 
     m = (m - 1) % 12 + 1;
 
     // 하루 빼기 (유효기간은 수집일 포함)
     d -= 1;
-    if (d == 0) {
-        d = 28;   // 문제 조건: 모든 달은 28일까지 있다고 가정
-        m -= 1;
-        if (m == 0) {
-            m = 12;
-            y -= 1;
-        }
-    }
+
 
     // 오늘(today)이 만료일보다 크면 만료
     if (today[0] > y) return false;

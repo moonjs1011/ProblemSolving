@@ -34,28 +34,26 @@ A + B + 3*C + B + 2A
 #include<map>
 
 using namespace std;
-int valid[101];
+int cnt[101];
 
 int main() {
     map<int, int> m;
-    int num = 1;
-    while (num <= 3) {
+    for(int num=1;num<=3;num++){
         int input;
         cin >> input;
-        m[num++] = input; //1대일때 = input && 2대일떄 = input && 3대일때 = input
+        m[num] = input; //1대일때 = input && 2대일떄 = input && 3대일때 = input
     }
-    num = 1;
-    while (num <= 3) {
+    for(int i =0;i<3;i++){
         int start, end;
         cin >> start >> end;
         for (int i = start; i < end; i++) {
-            valid[i] += 1;
+            cnt[i] += 1;
         }
-        num++;
     }
+    
     int sum = 0;
     for (int i = 1; i < 101; i++) {
-        sum += m[valid[i]] * valid[i];
+        sum += m[cnt[i]] * cnt[i];
     }
     cout << sum << "\n";
 
